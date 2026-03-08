@@ -1,0 +1,13 @@
+server:
+  port: 8089
+spring:
+  application:
+    name: "Security"
+  datasource:
+    url: jdbc:mysql://localhost:3308/seuirty
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
