@@ -20,6 +20,7 @@ public class SringSecurity {
         http.authorizeHttpRequests(auth ->
                   auth.requestMatchers("/create").permitAll()
                           .requestMatchers("/fetch").authenticated()
+                          .requestMatchers("/user").permitAll()
                 );
         http.httpBasic(Customizer.withDefaults());
         http.formLogin(Customizer.withDefaults());
