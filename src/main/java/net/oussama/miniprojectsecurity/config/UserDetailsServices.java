@@ -27,7 +27,7 @@ public class UserDetailsServices implements UserDetailsService {
         if (customer == null) {
             throw new UsernameNotFoundException(email);
         }
-        User user = new User(customer.getEmail(), customer.getPassword(), grantedAuthorities);
+        SecuirtyUser user = new SecuirtyUser(customer);
         return  user;
     }
 }
