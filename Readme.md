@@ -1,6 +1,1 @@
-Create Custom UerDetailsServices from DB
-![img.png](img.png)
-ici avons implement le UserDetailsServices
-par defualt le DAOauthentificationprovider utilise le UserDetails  pour charge le user from une
-source alors le code pour implement cette custom configuration 
-![img_1.png](img_1.png)
+<img width="3897" height="2022" alt="image" src="https://github.com/user-attachments/assets/dd3b28fa-58c1-4d91-a3f3-a2e0957b0d38" />
