@@ -20,7 +20,6 @@ public class SringSecurity {
 
     @Bean
     SecurityFilterChain deafultFilterChain(HttpSecurity http) throws Exception {
-        System.out.println("heelo my freiend");
         http.csrf(csrf -> csrf.disable());
 
         http.authorizeHttpRequests(auth ->
