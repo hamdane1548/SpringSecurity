@@ -1,5 +1,6 @@
 package net.oussama.miniprojectsecurity.config;
 
+import net.oussama.miniprojectsecurity.filtre.CustomerEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,13 +25,13 @@ public class SringSecurity {
 
         http.authorizeHttpRequests(auth ->
                   auth.requestMatchers("/create").permitAll()
-                          .requestMatchers("/fetch","/hello","/bye","/test").authenticated()
+                          .requestMatchers("/fetch","/hello","/bye","/test","/home").authenticated()
                           .requestMatchers("/user","/auth").permitAll()
                 );
        // http.authenticationProvider(AuthenitficationProvider.class.newInstance());
         http.httpBasic(customizer ->{
             customizer.realmName("MiniProjectSecurity");
-
+            customizer.authenticationEntryPoint(new CustomerEntryPoint());
         });
         http.formLogin(Customizer.withDefaults());
         return http.build();
