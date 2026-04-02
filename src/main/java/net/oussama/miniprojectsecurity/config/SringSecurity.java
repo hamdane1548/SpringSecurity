@@ -24,11 +24,14 @@ public class SringSecurity {
 
         http.authorizeHttpRequests(auth ->
                   auth.requestMatchers("/create").permitAll()
-                          .requestMatchers("/fetch","/hello").authenticated()
+                          .requestMatchers("/fetch","/hello","/bye","/test").authenticated()
                           .requestMatchers("/user","/auth").permitAll()
                 );
        // http.authenticationProvider(AuthenitficationProvider.class.newInstance());
-        http.httpBasic(Customizer.withDefaults());
+        http.httpBasic(customizer ->{
+            customizer.realmName("MiniProjectSecurity");
+
+        });
         http.formLogin(Customizer.withDefaults());
         return http.build();
     }

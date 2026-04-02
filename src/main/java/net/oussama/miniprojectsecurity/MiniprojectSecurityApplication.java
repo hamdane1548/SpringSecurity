@@ -2,14 +2,19 @@ package net.oussama.miniprojectsecurity;
 
 import net.oussama.miniprojectsecurity.Entity.Customer;
 import net.oussama.miniprojectsecurity.repository.Repositoryinterface;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @SpringBootApplication
 @EnableWebSecurity
+@EnableAsync
 public class MiniprojectSecurityApplication {
 
     public static void main(String[] args) {
@@ -27,5 +32,12 @@ public class MiniprojectSecurityApplication {
           repositoryinterface.save(customer);
         };
 
+    }
+    @Bean
+    public InitializingBean init() {
+        System.out.println("init method");
+        return  () -> SecurityContextHolder.setStrategyName(
+                SecurityContextHolder.MODE_INHERITABLETHREADLOCAL
+        );
     }
 }
