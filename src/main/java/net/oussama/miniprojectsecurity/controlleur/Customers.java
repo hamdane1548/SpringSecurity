@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -53,6 +54,11 @@ public class Customers {
     @GetMapping("/hello")
     public String hello(Authentication a) {
         return "Hello, " + a.getName() + "!";
+    }
+
+    @GetMapping("/authorisation")
+    public ResponseEntity<String> authorisation(Authentication a) {
+        return ResponseEntity.status(HttpStatus.OK).body("heelo");
     }
 
     @GetMapping("/bye")

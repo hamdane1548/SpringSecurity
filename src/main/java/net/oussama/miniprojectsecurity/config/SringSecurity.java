@@ -1,5 +1,8 @@
 package net.oussama.miniprojectsecurity.config;
 
+import lombok.AllArgsConstructor;
+import net.oussama.miniprojectsecurity.filtre.CustomAuthenticationFailureHandler;
+import net.oussama.miniprojectsecurity.filtre.CustomerAuthentificationSuccessHandler;
 import net.oussama.miniprojectsecurity.filtre.CustomerEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,12 +15,16 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.sql.DataSource;
 
 @Configuration
+@RestController
 public class SringSecurity {
-
+    @Autowired
+     private CustomerAuthentificationSuccessHandler  customerAuthentificationSuccessHandler;
+     private CustomAuthenticationFailureHandler   customAuthenticationFailureHandler;
     @Bean
     SecurityFilterChain deafultFilterChain(HttpSecurity http) throws Exception {
         System.out.println("heelo my freiend");
@@ -26,6 +33,7 @@ public class SringSecurity {
         http.authorizeHttpRequests(auth ->
                   auth.requestMatchers("/create").permitAll()
                           .requestMatchers("/fetch","/hello","/bye","/test","/home").authenticated()
+                          .requestMatchers("/authorisation").hasAuthority("READ")
                           .requestMatchers("/user","/auth").permitAll()
                 );
        // http.authenticationProvider(AuthenitficationProvider.class.newInstance());
@@ -33,7 +41,12 @@ public class SringSecurity {
             customizer.realmName("MiniProjectSecurity");
             customizer.authenticationEntryPoint(new CustomerEntryPoint());
         });
-        http.formLogin(Customizer.withDefaults());
+        http.formLogin(customizer ->{
+            customizer.successHandler(
+                    customerAuthentificationSuccessHandler
+            );
+            customizer.failureHandler(customAuthenticationFailureHandler);
+        });
         return http.build();
     }
     @Bean

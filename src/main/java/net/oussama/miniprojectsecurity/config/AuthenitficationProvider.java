@@ -23,6 +23,7 @@ public class AuthenitficationProvider implements AuthenticationProvider {
         System.out.println("Username: " + username);
         SecuirtyUser u = (SecuirtyUser) userDetailsServicesImpl.loadUserByUsername(username);
         if(passwordEncoder.matches(password, u.getPassword())) {
+            System.out.println(u.getAuthorities());
             System.out.println("Password Match");
             return new UsernamePasswordAuthenticationToken(username, password, u.getAuthorities());
         }else {

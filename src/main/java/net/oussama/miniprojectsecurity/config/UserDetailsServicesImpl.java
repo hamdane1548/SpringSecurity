@@ -24,7 +24,7 @@ public class UserDetailsServicesImpl implements UserDetailsService {
         if (customer == null) {
             throw new UsernameNotFoundException(email);
         }
-        SecuirtyUser user = new SecuirtyUser(customer);
+        SecuirtyUser user = new SecuirtyUser(customer,grantedAuthorities);
         return  user;
     }
 }

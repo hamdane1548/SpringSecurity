@@ -10,12 +10,14 @@ import java.util.List;
 
 public class SecuirtyUser implements UserDetails {
     private final Customer customer;
-    public SecuirtyUser(Customer customer) {
+    private final List<GrantedAuthority> grantedAuthorities;
+    public SecuirtyUser(Customer customer, List<GrantedAuthority> grantedAuthorities) {
         this.customer = customer;
+        this.grantedAuthorities = grantedAuthorities;
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return  grantedAuthorities;
     }
 
     @Override
