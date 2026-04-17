@@ -95,4 +95,28 @@ public class Customers {
         System.out.println(authentication);
         return ResponseEntity.ok(authentication);
     }
+    @PostMapping("/a")
+    public String postEndpointA() {
+        return "Works!";
+    }
+    @GetMapping("/a")
+    public String getEndpointA() {
+        return "Works!";
+    }
+    @GetMapping("/a/b")
+    public String getEnpointB() {
+        return "Works!";
+    }
+    @GetMapping("/a/b/c")
+    public String getEnpointC() {
+        return "Works!";
+    }
+    @GetMapping("/product/{code}")
+    public String getProduct(@PathVariable("code") String code) {
+        return code;
+    }
+    @GetMapping("/video/{country}/{langage}")
+    public String getVideo(@PathVariable String country, @PathVariable String langage) {
+        return "video is watched from the country"+ country+"with the langage "+langage;
+    }
 }

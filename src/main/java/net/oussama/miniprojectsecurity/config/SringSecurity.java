@@ -7,6 +7,7 @@ import net.oussama.miniprojectsecurity.filtre.CustomerEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,9 +34,15 @@ public class SringSecurity {
         http.authorizeHttpRequests(auth ->
                   auth.requestMatchers("/create").permitAll()
                           .requestMatchers("/fetch","/hello","/bye","/test","/home").authenticated()
-                          .requestMatchers("/authorisation").hasAuthority("READ")
+                          .requestMatchers("/authorisation").hasRole("MANAGER")
                           .requestMatchers("/user","/auth").permitAll()
+                          .requestMatchers(HttpMethod.GET, "/a").authenticated()
+                          .requestMatchers(HttpMethod.POST, "/a").permitAll()
+                          .requestMatchers("/product/{code:^[0-9]*$}").permitAll()
+                          .requestMatchers("/video/{country:.*/(usa|uk|canada)}/{langage}").authenticated()
+                          .anyRequest().denyAll()
                 );
+        
        // http.authenticationProvider(AuthenitficationProvider.class.newInstance());
         http.httpBasic(customizer ->{
             customizer.realmName("MiniProjectSecurity");

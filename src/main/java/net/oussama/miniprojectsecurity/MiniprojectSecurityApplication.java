@@ -30,6 +30,12 @@ public class MiniprojectSecurityApplication {
                   .email("oussama@gmail.com")
                   .build();
           repositoryinterface.save(customer);
+          repositoryinterface.save(Customer.builder()
+                          .firstName("Oussama")
+                          .password("12345")
+                          .grantedAuthorities("ROLE_MANAGER")
+                          .email("hamdane@gmail.com")
+                  .build());
         };
 
     }
