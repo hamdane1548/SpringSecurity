@@ -31,7 +31,6 @@ public class SringSecurity {
      private CustomAuthenticationFailureHandler   customAuthenticationFailureHandler;
     @Bean
     SecurityFilterChain deafultFilterChain(HttpSecurity http) throws Exception {
-        System.out.println("heelo my freiend");
         http.csrf(csrf -> csrf.disable());
 
         http.authorizeHttpRequests(auth ->
