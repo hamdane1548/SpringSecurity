@@ -1,6 +1,8 @@
 package net.oussama.miniprojectsecurity.config;
 
 import lombok.AllArgsConstructor;
+import net.oussama.miniprojectsecurity.CustomFilter.AuthenticationLoggingFilter;
+import net.oussama.miniprojectsecurity.CustomFilter.RequestValidationFilter;
 import net.oussama.miniprojectsecurity.filtre.CustomAuthenticationFailureHandler;
 import net.oussama.miniprojectsecurity.filtre.CustomerAuthentificationSuccessHandler;
 import net.oussama.miniprojectsecurity.filtre.CustomerEntryPoint;
@@ -16,6 +18,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.sql.DataSource;
@@ -39,7 +42,7 @@ public class SringSecurity {
                           .requestMatchers(HttpMethod.GET, "/a").authenticated()
                           .requestMatchers(HttpMethod.POST, "/a").permitAll()
                           .requestMatchers("/product/{code:^[0-9]*$}").permitAll()
-                          .requestMatchers("/video/{country:.*/(usa|uk|canada)}/{langage}").authenticated()
+                         // .requestMatchers("/video/{country:.*/(usa|uk|canada)}/{langage}").authenticated()
                           .anyRequest().denyAll()
                 );
         
@@ -48,6 +51,8 @@ public class SringSecurity {
             customizer.realmName("MiniProjectSecurity");
             customizer.authenticationEntryPoint(new CustomerEntryPoint());
         });
+        http.addFilterBefore(new RequestValidationFilter(), BasicAuthenticationFilter.class);
+        http.addFilterAfter(new AuthenticationLoggingFilter(),BasicAuthenticationFilter.class);
         http.formLogin(customizer ->{
             customizer.successHandler(
                     customerAuthentificationSuccessHandler
