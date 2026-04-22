@@ -3,7 +3,6 @@ package net.oussama.miniprojectsecurity.config;
 import lombok.AllArgsConstructor;
 import net.oussama.miniprojectsecurity.CSRF.CSRF;
 import net.oussama.miniprojectsecurity.CustomFilter.AuthenticationLoggingFilter;
-import net.oussama.miniprojectsecurity.CustomFilter.CsrfTokenLogger;
 import net.oussama.miniprojectsecurity.CustomFilter.RequestValidationFilter;
 import net.oussama.miniprojectsecurity.filtre.CustomAuthenticationFailureHandler;
 import net.oussama.miniprojectsecurity.filtre.CustomerAuthentificationSuccessHandler;
@@ -24,17 +23,20 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.sql.DataSource;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @RestController
 @AllArgsConstructor
 public class SringSecurity {
-    @Bean
-    public CsrfTokenRepository customTokenRepository() {
-        return new CSRF();
-    }
+
      private CustomerAuthentificationSuccessHandler  customerAuthentificationSuccessHandler;
      private CustomAuthenticationFailureHandler   customAuthenticationFailureHandler;
     @Bean
@@ -49,20 +51,21 @@ public class SringSecurity {
                           .requestMatchers("/main","/product/add","/csrf").authenticated()
                           .requestMatchers(HttpMethod.POST, "/a").permitAll()
                           .requestMatchers("/product/{code:^[0-9]*$}").permitAll()
-
+                          .requestMatchers("/product/test","/product/gettoken").authenticated()
+                          .requestMatchers("/product/test3").authenticated()
                          // .requestMatchers("/video/{country:.*/(usa|uk|canada)}/{langage}").authenticated()
                           .anyRequest().denyAll()
                 );
+        http.cors(Customizer.withDefaults());
         http.csrf(customCsrf ->{
             customCsrf.ignoringRequestMatchers("/test1");
-            customCsrf.csrfTokenRepository(customTokenRepository());
+            System.out.println("---------------init of customCsrf");
         });
        // http.authenticationProvider(AuthenitficationProvider.class.newInstance());
         http.httpBasic(customizer ->{
             customizer.realmName("MiniProjectSecurity");
             customizer.authenticationEntryPoint(new CustomerEntryPoint());
         });
-        http.addFilterAfter(new CsrfTokenLogger(), CsrfFilter.class);
        // http.addFilterAt(staticKeyAuthenticationFilter, BasicAuthenticationFilter.class);
        // http.addFilterBefore(new RequestValidationFilter(), StaticKeyAuthenticationFilter.class);
       //  http.addFilterAfter(new AuthenticationLoggingFilter(),StaticKeyAuthenticationFilter.class);
@@ -80,6 +83,20 @@ public class SringSecurity {
         return new PasswordEncoderImpl();
     }
 
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.setAllowedOrigins(List.of("http://localhost:8089"));
+        config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setExposedHeaders(List.of("Authorization"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
 
 
 }

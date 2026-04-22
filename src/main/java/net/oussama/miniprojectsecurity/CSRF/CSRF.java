@@ -20,20 +20,28 @@ public class CSRF implements CsrfTokenRepository {
     private  CsrfRepository csrfRepository;
     @Override
     public CsrfToken generateToken(HttpServletRequest request) {
+        System.out.println("im here 2 ");
         String token = UUID.randomUUID().toString();
         return new DefaultCsrfToken("X-CSRF-TOKEN","_csrf", token);
     }
 
     @Override
     public void saveToken(@Nullable CsrfToken token, HttpServletRequest request, HttpServletResponse response) {
-        System.out.println(csrfRepository);
+        System.out.println("im here 1 ");
+        System.out.println("token: " + token.getToken());
       String identifieruser =  request.getHeader("X-IDENTIFIER");
+      if(identifieruser==null){
+          response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+          throw new RuntimeException("X-IDENTIFIER header not found");
+      }
         Optional<net.oussama.miniprojectsecurity.Entity.CSRF> user = csrfRepository.findTokenByIdentifier(identifieruser);
         if(user.isPresent()) {
-            System.out.println("user found");
+            System.out.println("user found"+user);
             net.oussama.miniprojectsecurity.Entity.CSRF extoken = user.get();
-            response.setHeader("X-CSRF-TOKEN", extoken.getToken());
             extoken.setToken(token.getToken());
+            csrfRepository.save(extoken);
+            response.setHeader("X-CSRF-TOKEN", extoken.getToken());
+            response.setHeader("_csrf", extoken.getToken());
         }else {
             net.oussama.miniprojectsecurity.Entity.CSRF tokencsrf = new net.oussama.miniprojectsecurity.Entity.CSRF();
             tokencsrf.setToken(token.getToken());
@@ -45,19 +53,22 @@ public class CSRF implements CsrfTokenRepository {
 
     @Override
     public @Nullable CsrfToken loadToken(HttpServletRequest request) {
-         String identifieruser =  request.getHeader("X-IDENTIFIER");
+        System.out.println("im here 3");
+        String identifieruser =  request.getHeader("X-IDENTIFIER");
          String token = request.getHeader("X-CSRF-TOKEN");
          Optional<net.oussama.miniprojectsecurity.Entity.CSRF > existingtoken = csrfRepository.findTokenByIdentifier(identifieruser);
         if(existingtoken.isPresent()) {
-           // System.out.println("existing token");
+           System.out.println("existing token");
             net.oussama.miniprojectsecurity.Entity.CSRF tokencsrf = existingtoken.get();
             System.out.println(tokencsrf.getToken());
-            if(tokencsrf.getToken().equals(token)) {
-                return new DefaultCsrfToken("X-CSRF-TOKEN","_csrf", tokencsrf.getToken());
+            System.out.println(tokencsrf.getToken()+"ddd"+token);
+            if(existingtoken.get().getToken().equals(token)) {
+                System.out.println("token found testtt");
+                CsrfToken tokentest = new DefaultCsrfToken("X-CSRF-TOKEN","_csrf", tokencsrf.getToken());
+                return (CsrfToken) tokentest;
             }
             return  null;
         }
-        System.out.println("token not found");
         return null;
     }
 }
