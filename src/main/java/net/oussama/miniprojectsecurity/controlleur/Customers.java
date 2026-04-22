@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +32,14 @@ import java.util.concurrent.Executors;
 public class Customers {
     private ServiceCustomerImpl  serviceCustomerImpl;
     private UserDetailsServicesImpl userDetailsservicesImpl;
+    @PostMapping("/csrf")
+    public String csrf(){
+        return "ttttttt";
+    }
+    @GetMapping("/csrf")
+    public String csrfssss(){
+        return "ttttttt";
+    }
     @PostMapping("/create")
     ResponseEntity<Customer> create( @RequestBody  Customer customer) {
         System.out.println(customer.getFirstName() + customer.getFirstName());
@@ -52,7 +61,12 @@ public class Customers {
 
     }
     @GetMapping("/hello")
-    public String hello(Authentication a) {
+    public String getHello(Authentication a) {
+        return "Hello, " + a.getName() + "!";
+    }
+
+    @PostMapping("/hello")
+    public String postHello(Authentication a) {
         return "Hello, " + a.getName() + "!";
     }
 
@@ -118,5 +132,12 @@ public class Customers {
     @GetMapping("/video/{country}/{langage}")
     public String getVideo(@PathVariable String country, @PathVariable String langage) {
         return "video is watched from the country"+ country+"with the langage "+langage;
+    }
+    @GetMapping("/main")
+    public ModelAndView main() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("main.html");
+       // System.out.println("main");
+        return modelAndView;
     }
 }

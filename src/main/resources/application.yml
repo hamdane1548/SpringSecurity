@@ -11,3 +11,5 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create
+authorization:
+  key: SD9cICjl1e

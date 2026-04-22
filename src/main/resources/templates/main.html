@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+</head>
+<body>
+     <h1>main html</h1>
+     <form action="/product/add" method="post">
+         <span>Name:</span>
+         <span><input type="text" name="name" /></span>
+         <span><button type="submit">Add</button></span>
+         <input type="hidden"
+                th:name="${_csrf.parameterName}"
+                th:value="${_csrf.token}" />
+     </form>
+</body>
+</html>
