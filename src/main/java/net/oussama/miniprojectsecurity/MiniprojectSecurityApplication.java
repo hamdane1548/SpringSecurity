@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @SpringBootApplication
 @EnableWebSecurity
 @EnableAsync
+@EnableMethodSecurity
 public class MiniprojectSecurityApplication {
 
     public static void main(String[] args) {
@@ -35,6 +37,12 @@ public class MiniprojectSecurityApplication {
                           .password("12345")
                           .grantedAuthorities("ROLE_MANAGER")
                           .email("hamdane@gmail.com")
+                  .build());
+          repositoryinterface.save(Customer.builder()
+                          .firstName("hamdane")
+                          .password("12345")
+                          .grantedAuthorities("WRITE")
+                          .email("hamdane30@gmail.com")
                   .build());
         };
 

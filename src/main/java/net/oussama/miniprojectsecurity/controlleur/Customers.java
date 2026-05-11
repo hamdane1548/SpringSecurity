@@ -10,8 +10,8 @@ import net.oussama.miniprojectsecurity.config.UserDetailsServicesImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.concurrent.DelegatingSecurityContextCallable;
-import org.springframework.security.concurrent.DelegatingSecurityContextRunnable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +19,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -100,14 +99,11 @@ public class Customers {
         return "";
     }
     @PostMapping("/auth")
-    public ResponseEntity<Authentication> login(@RequestBody Login login) {
+    public Authentication login(@RequestBody Login login) {
         SecuirtyUser user = (SecuirtyUser) userDetailsservicesImpl.loadUserByUsername(login.getEmail());
-        System.out.println(user.getUsername());
-        System.out.println(user.getPassword());
-        SecurityContext context = SecurityContextHolder.getContext();
-        Authentication authentication = context.getAuthentication();
-        System.out.println(authentication);
-        return ResponseEntity.ok(authentication);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), user.getAuthorities());
+       // System.out.println(authentication.getAuthorities());
+        return authentication;
     }
     @PostMapping("/a")
     public String postEndpointA() {
@@ -139,5 +135,9 @@ public class Customers {
         modelAndView.setViewName("main.html");
        // System.out.println("main");
         return modelAndView;
+    }
+    @GetMapping("/test_request")
+    public Authentication testRequest() {
+        return serviceCustomerImpl.findName();
     }
 }

@@ -18,7 +18,6 @@ public class UserDetailsServicesImpl implements UserDetailsService {
     private Repositoryinterface repository;
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
         Customer customer = repository.findByEmail(email);
         List<GrantedAuthority> grantedAuthorities =  List.of(new SimpleGrantedAuthority(customer.getGrantedAuthorities()));
         if (customer == null) {

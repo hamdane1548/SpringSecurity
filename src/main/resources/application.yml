@@ -4,7 +4,7 @@ spring:
   application:
     name: "Security"
   datasource:
-    url: jdbc:mysql://localhost:3308/seuirty
+    url: jdbc:mysql://localhost:3308/secuirty
     username: root
     password: root
   jpa:

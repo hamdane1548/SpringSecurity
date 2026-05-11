@@ -53,12 +53,14 @@ public class SringSecurity {
                           .requestMatchers("/product/{code:^[0-9]*$}").permitAll()
                           .requestMatchers("/product/test","/product/gettoken").authenticated()
                           .requestMatchers("/product/test3").authenticated()
+                          .requestMatchers("/test_request").authenticated()
                          // .requestMatchers("/video/{country:.*/(usa|uk|canada)}/{langage}").authenticated()
                           .anyRequest().denyAll()
                 );
         http.cors(Customizer.withDefaults());
         http.csrf(customCsrf ->{
             customCsrf.ignoringRequestMatchers("/test1");
+            customCsrf.ignoringRequestMatchers("/auth");
             System.out.println("---------------init of customCsrf");
         });
        // http.authenticationProvider(AuthenitficationProvider.class.newInstance());
