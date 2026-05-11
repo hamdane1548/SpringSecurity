@@ -8,6 +8,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -18,14 +19,14 @@ public class AuthenitficationProvider implements AuthenticationProvider {
     private PasswordEncoderImpl passwordEncoder;
     @Override
     public @Nullable Authentication authenticate(Authentication authentication) throws AuthenticationException {
+
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
-        System.out.println("Username: " + username);
         SecuirtyUser u = (SecuirtyUser) userDetailsServicesImpl.loadUserByUsername(username);
         if(passwordEncoder.matches(password, u.getPassword())) {
-            System.out.println(u.getAuthorities());
-            System.out.println("Password Match");
-            return new UsernamePasswordAuthenticationToken(username, password, u.getAuthorities());
+            Authentication auth = new UsernamePasswordAuthenticationToken(username, password, u.getAuthorities());
+             SecurityContextHolder.getContext().setAuthentication(auth);
+            return  auth;
         }else {
             throw new BadCredentialsException("Invalid username or password");
         }
